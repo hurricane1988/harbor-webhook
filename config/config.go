@@ -21,6 +21,7 @@ import (
 	"errors"
 	"github.com/fsnotify/fsnotify"
 	"github.com/hurricane1988/harbor-webhook/pkg/db/mysql"
+	"github.com/hurricane1988/harbor-webhook/pkg/kafka"
 	"github.com/hurricane1988/harbor-webhook/pkg/redis"
 	"github.com/spf13/viper"
 	"k8s.io/client-go/util/homedir"
@@ -92,5 +93,6 @@ func New() *Config {
 	return &Config{
 		RedisOptions: redis.NewRedisOptions(),
 		MysqlOptions: mysql.NewMysqlOptions(),
+		KafkaOptions: kafka.NewKafkaOptions(),
 	}
 }

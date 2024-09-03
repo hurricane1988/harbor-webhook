@@ -18,3 +18,17 @@ mysql:
   username: root
   password: password
   db: test
+
+# Kafka集群配置块
+kafka:
+  username: root
+  password: root
+  brokers:
+    - localhost:9093
+    - localhost:9092
+    - localhost:9094
+  topics:
+    - topic-a
+    - topic-b
+  async: false
+  allowAutoTopicCreation: true

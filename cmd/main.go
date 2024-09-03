@@ -44,7 +44,7 @@ func main() {
 	router.Use(middleware.Cors)
 	routes.Router(router)
 	// gin程序启动
-	err := router.Run(strings.Join([]string{"0.0.0.0", "80"}, ":"))
+	err := router.Run(strings.Join([]string{"0.0.0.0", "8080"}, ":"))
 	if err != nil {
 		setupLog.Error(err, "startup harbor-webhook failed.")
 		return

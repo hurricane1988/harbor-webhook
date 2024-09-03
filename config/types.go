@@ -18,6 +18,7 @@ package config
 
 import (
 	"github.com/hurricane1988/harbor-webhook/pkg/db/mysql"
+	"github.com/hurricane1988/harbor-webhook/pkg/kafka"
 	"github.com/hurricane1988/harbor-webhook/pkg/redis"
 )
 
@@ -25,4 +26,5 @@ import (
 type Config struct {
 	RedisOptions *redis.Options `json:"redisOptions,omitempty" yaml:"redisOptions,omitempty" xml:"redisOptions,omitempty" mapstructure:"redis"`
 	MysqlOptions *mysql.Options `json:"mysqlOptions,omitempty" yaml:"mysqlOptions,omitempty" xml:"mysqlOptions,omitempty" mapstructure:"mysql"`
+	KafkaOptions *kafka.Options `json:"kafkaOptions,omitempty" yaml:"kafkaOptions,omitempty" xml:"kafkaOptions,omitempty" mapstructure:"kafka"`
 }

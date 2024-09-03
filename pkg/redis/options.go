@@ -23,6 +23,7 @@ type Options struct {
 	DB       int32    `json:"db,omitempty" yaml:"db,omitempty" xml:"db,omitempty"`
 }
 
+// NewRedisOptions 实例化Redis Options
 func NewRedisOptions() *Options {
 	return &Options{
 		Address:  make([]string, 0),
