@@ -14,12 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package routes
+package redis
 
-import (
-	"github.com/gin-gonic/gin"
-)
+type Options struct {
+	Address  []string `json:"address,omitempty" yaml:"address,omitempty" xml:"address,omitempty"`
+	Username string   `json:"username,omitempty" yaml:"username,omitempty" xml:"username,omitempty"`
+	Password string   `json:"password,omitempty" yaml:"password,omitempty" xml:"password,omitempty"`
+	DB       int32    `json:"db,omitempty" yaml:"db,omitempty" xml:"db,omitempty"`
+}
 
-// Router 全局router注册
-func Router(e *gin.Engine) {
+func NewRedisOptions() *Options {
+	return &Options{
+		Address:  make([]string, 0),
+		Username: "",
+		Password: "",
+		DB:       0,
+	}
 }

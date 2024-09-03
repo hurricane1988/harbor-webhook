@@ -14,12 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package routes
+package config
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/hurricane1988/harbor-webhook/pkg/db/mysql"
+	"github.com/hurricane1988/harbor-webhook/pkg/redis"
 )
 
-// Router 全局router注册
-func Router(e *gin.Engine) {
+// Config 全局配置
+type Config struct {
+	RedisOptions *redis.Options `json:"redisOptions,omitempty" yaml:"redisOptions,omitempty" xml:"redisOptions,omitempty" mapstructure:"redis"`
+	MysqlOptions *mysql.Options `json:"mysqlOptions,omitempty" yaml:"mysqlOptions,omitempty" xml:"mysqlOptions,omitempty" mapstructure:"mysql"`
 }

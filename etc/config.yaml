@@ -1,0 +1,20 @@
+# Redis配置块
+redis:
+  address:
+    - 10.10.10.10:6379
+    - 10.10.10.10:6379
+    - 10.10.10.10:6379
+    - 10.10.10.10:6379
+    - 10.10.10.10:6379
+    - 10.10.10.10:6379
+  db: 0
+  username: root
+  password: password
+
+# MySQL 配置块
+mysql:
+  host: 10.10.10.10
+  port: 3306
+  username: root
+  password: password
+  db: test

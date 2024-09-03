@@ -14,12 +14,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package routes
-
-import (
-	"github.com/gin-gonic/gin"
-)
-
-// Router 全局router注册
-func Router(e *gin.Engine) {
-}
+package redis
