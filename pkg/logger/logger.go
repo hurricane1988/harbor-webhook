@@ -32,11 +32,11 @@ import (
 var (
 	loggerMap sync.Map
 	zapOpts   zap.Options
-	
+
 	logPath           string
 	logFileMaxAge     time.Duration
 	logFileRotateTime time.Duration
-	
+
 	onDisk = true
 )
 
@@ -71,13 +71,13 @@ func GetLoggerByName(name string) logr.Logger {
 	if value, ok := loggerMap.Load(name); ok {
 		return value.(logr.Logger)
 	}
-	
+
 	newLogger := zap.New(
 		zap.UseFlagOptions(&zapOpts),
 		zap.WriteTo(GetLogWriter(name)),
 	)
 	loggerMap.Store(name, newLogger)
-	
+
 	return newLogger
 }
 
