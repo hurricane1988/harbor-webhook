@@ -24,6 +24,8 @@ import (
 
 // RegisterRouter 定义Prometheus metric路由
 func RegisterRouter(e *gin.Engine) {
+	// 设置路由分组
+	group := e.Group("")
 	prometheus.MustRegister(ApiSummary)
-	e.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	group.GET("/metrics", gin.WrapH(promhttp.Handler()))
 }
