@@ -18,10 +18,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/hurricane1988/harbor-webhook/middleware"
 	"github.com/hurricane1988/harbor-webhook/pkg/utils"
 	"github.com/hurricane1988/harbor-webhook/pkg/version"
+	"github.com/hurricane1988/harbor-webhook/routes"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"strings"
 )
 
 var (
@@ -34,4 +38,15 @@ func main() {
 	fmt.Println(utils.Term())
 	// 打印版本信息
 	fmt.Println(version.String())
+	// 初始化gin对象
+	router := gin.New()
+	// 启用跨域中间件
+	router.Use(middleware.Cors)
+	routes.Router(router)
+	// gin程序启动
+	err := router.Run(strings.Join([]string{"0.0.0.0", "80"}, ":"))
+	if err != nil {
+		setupLog.Error(err, "startup harbor-webhook failed.")
+		return
+	}
 }

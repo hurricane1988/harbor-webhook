@@ -18,8 +18,11 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/hurricane1988/harbor-webhook/pkg/metrics"
 )
 
 // Router 全局router注册
 func Router(e *gin.Engine) {
+	// 注册Prometheus Metric路由
+	metrics.RegisterRouter(e)
 }

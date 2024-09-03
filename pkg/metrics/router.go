@@ -22,8 +22,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-// Router 定义Prometheus metric路由
-func Router(e *gin.Engine) {
+// RegisterRouter 定义Prometheus metric路由
+func RegisterRouter(e *gin.Engine) {
 	prometheus.MustRegister(ApiSummary)
 	e.GET("/metrics", gin.WrapH(promhttp.Handler()))
 }
