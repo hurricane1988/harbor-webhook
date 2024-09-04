@@ -16,23 +16,73 @@ limitations under the License.
 
 package kafka
 
+import (
+	"github.com/segmentio/kafka-go"
+	"github.com/segmentio/kafka-go/sasl"
+	"github.com/segmentio/kafka-go/sasl/plain"
+	"github.com/segmentio/kafka-go/sasl/scram"
+	"log"
+	"time"
+)
+
 // Options Kafka 配置Options
 type Options struct {
-	Username               string   `json:"username,omitempty" yaml:"username,omitempty" xml:"username,omitempty"`
-	Password               string   `json:"password,omitempty" yaml:"password,omitempty" xml:"password,omitempty"`
-	Brokers                []string `json:"brokers,omitempty" yaml:"brokers,omitempty" xml:"brokers,omitempty"`
-	Topics                 []string `json:"topics,omitempty" yaml:"topics,omitempty" xml:"topics,omitempty"`
-	Async                  bool     `json:"async,omitempty" yaml:"async,omitempty" xml:"async,omitempty"`
-	AllowAutoTopicCreation bool     `json:"allowAutoTopicCreation,omitempty" yaml:"allowAutoTopicCreation,omitempty" xml:"allowAutoTopicCreation,omitempty"`
+	Username               string          `json:"username,omitempty" yaml:"username,omitempty" xml:"username,omitempty"`
+	Password               string          `json:"password,omitempty" yaml:"password,omitempty" xml:"password,omitempty"`
+	Brokers                []string        `json:"brokers,omitempty" yaml:"brokers,omitempty" xml:"brokers,omitempty"`
+	Topics                 []string        `json:"topics,omitempty" yaml:"topics,omitempty" xml:"topics,omitempty"`
+	Timeout                time.Duration   `json:"timeout,omitempty" yaml:"timeout,omitempty" xml:"timeout,omitempty"`
+	Async                  bool            `json:"async,omitempty" yaml:"async,omitempty" xml:"async,omitempty"`
+	Algo                   scram.Algorithm `json:"algo,omitempty" yaml:"algo,omitempty" xml:"algo,omitempty"`
+	Protocol               string          `json:"protocol,omitempty" yaml:"protocol,omitempty" xml:"protocol,omitempty"`
+	AllowAutoTopicCreation bool            `json:"allowAutoTopicCreation,omitempty" yaml:"allowAutoTopicCreation,omitempty" xml:"allowAutoTopicCreation,omitempty"`
 }
 
 func NewKafkaOptions() *Options {
 	return &Options{
 		Username:               "",
 		Password:               "",
+		Timeout:                time.Second * 5,
 		Brokers:                make([]string, 0),
 		Topics:                 make([]string, 0),
 		Async:                  true,
 		AllowAutoTopicCreation: true,
 	}
+}
+
+// Dialer 返回kafka.Dialer方法
+func Dialer(algo scram.Algorithm, username, password string, timeout time.Duration, dualStack bool) (sasl.Mechanism, *kafka.Dialer) {
+	// 判断plain是否为空
+	if algo == nil && username == "" && password == "" {
+		return nil, &kafka.Dialer{
+			Timeout:       timeout,
+			DualStack:     dualStack,
+			SASLMechanism: nil,
+		}
+	}
+	// 初始化scram 加密mechanism
+	if algo != nil && username != "" && password != "" {
+		mechanism, err := scram.Mechanism(scram.SHA512, username, password)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		return mechanism, &kafka.Dialer{
+			Timeout:       timeout,
+			DualStack:     dualStack,
+			SASLMechanism: mechanism,
+		}
+	}
+	// 初始化 plain明文mechanism
+	if algo == nil && username != "" && password != "" {
+		mechanism := plain.Mechanism{
+			Username: username,
+			Password: password,
+		}
+		return mechanism, &kafka.Dialer{
+			Timeout:       timeout,
+			DualStack:     dualStack,
+			SASLMechanism: mechanism,
+		}
+	}
+	return nil, nil
 }

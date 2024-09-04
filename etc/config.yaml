@@ -23,6 +23,8 @@ mysql:
 kafka:
   username: root
   password: root
+  protocol: TCP
+  timeout: 10
   brokers:
     - localhost:9093
     - localhost:9092
