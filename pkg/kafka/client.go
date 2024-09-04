@@ -28,12 +28,12 @@ import (
 
 type Interface interface {
 	LeaderHost(ctx context.Context) (string, error)
-	WriteByConn(ctx context.Context, topic string, partition int, writeTimeout time.Duration, key, value []byte) error
-	ReadByConn(ctx context.Context, topic string, partition int, readTimeout time.Duration) (*kafka.Batch, error)
-	CreateTopicsByConn(ctx context.Context, topics []string, partition, replicationFactor int) error
-	DeleteTopicsByConn(ctx context.Context, topics []string) error
-	ListTopicByConn(ctx context.Context) ([]string, error)
-	DeleteAllTopicsByConn(ctx context.Context) error
+	Write(ctx context.Context, topic string, partition int, writeTimeout time.Duration, key, value []byte) error
+	Read(ctx context.Context, topic string, partition int, readTimeout time.Duration) (*kafka.Batch, error)
+	CreateTopics(ctx context.Context, topics []string, partition, replicationFactor int) error
+	DeleteTopics(ctx context.Context, topics []string) error
+	ListTopics(ctx context.Context) ([]string, error)
+	DeleteAllTopics(ctx context.Context) error
 }
 
 // LeaderHost 通过上下文获取当前Kafka集群的控制节点主机信息
@@ -44,8 +44,8 @@ type Interface interface {
 //
 // 返回值:
 //
-//	  string: 当前控制节点的主机信息（IP地址和端口号）
-//		 error: 在获取控制节点主机信息过程中可能遇到的错误，如果没有错误，则为nil
+//	string: 当前控制节点的主机信息（IP地址和端口号）
+//	error: 在获取控制节点主机信息过程中可能遇到的错误，如果没有错误，则为nil
 func (k *Options) LeaderHost(ctx context.Context) (string, error) {
 	logger := log.FromContext(ctx)
 	// 初始化dialer
@@ -66,7 +66,7 @@ func (k *Options) LeaderHost(ctx context.Context) (string, error) {
 	return net.JoinHostPort(leaderHost.Host, strconv.Itoa(leaderHost.Port)), nil
 }
 
-// WriteByConn 通过Kafka连接发送消息
+// Write 通过Kafka连接发送消息
 // 该函数负责将一条消息发送到指定的Kafka主题和分区。它首先尝试与Kafka集群的Leader节点建立连接，
 // 然后设置写超时时间，最后发送消息并关闭连接
 // 参数:
@@ -81,7 +81,7 @@ func (k *Options) LeaderHost(ctx context.Context) (string, error) {
 // 返回值:
 //
 //	error: 如果连接、设置超时、发送消息或关闭连接过程中发生错误，则返回该错误
-func (k *Options) WriteByConn(ctx context.Context, topic string, partition int, writeTimeout time.Duration, key, value []byte) error {
+func (k *Options) Write(ctx context.Context, topic string, partition int, writeTimeout time.Duration, key, value []byte) error {
 	// 从上下文中获取日志记录器
 	logger := log.FromContext(ctx)
 	// 尝试获取Kafka集群的Leader主机
@@ -113,7 +113,7 @@ func (k *Options) WriteByConn(ctx context.Context, topic string, partition int, 
 	return nil
 }
 
-// ReadByConn 通过指定的kafka连接读取指定主题和分区的数据
+// Read 通过指定的kafka连接读取指定主题和分区的数据
 // 参数:
 //
 //	ctx: 上下文，用于传递请求范围的值、配置截止时间以及取消操作
@@ -125,7 +125,7 @@ func (k *Options) WriteByConn(ctx context.Context, topic string, partition int, 
 //
 //	*kafka.Batch: 读取到的消息批次
 //	error: 如果发生错误，则返回错误信息
-func (k *Options) ReadByConn(ctx context.Context, topic string, partition int, readTimeout time.Duration) (*kafka.Batch, error) {
+func (k *Options) Read(ctx context.Context, topic string, partition int, readTimeout time.Duration) (*kafka.Batch, error) {
 	// 从上下文中获取日志记录器
 	logger := log.FromContext(ctx)
 	// 获取主题leader的主机地址
@@ -166,7 +166,7 @@ func (k *Options) ReadByConn(ctx context.Context, topic string, partition int, r
 	return batch, nil
 }
 
-// CreateTopicsByConn 创建Kafka主题
+// CreateTopics 创建Kafka主题
 // 该函数通过连接到Kafka集群的领导者节点来创建指定的主題
 // 参数:
 //
@@ -178,7 +178,7 @@ func (k *Options) ReadByConn(ctx context.Context, topic string, partition int, r
 // 返回值:
 //
 //	error: 表示创建主题时的错误，如果没有错误则是nil
-func (k *Options) CreateTopicsByConn(ctx context.Context, topics []string, partition, replicationFactor int) error {
+func (k *Options) CreateTopics(ctx context.Context, topics []string, partition, replicationFactor int) error {
 	// 初始化主题配置列表
 	var topicsConfigList []kafka.TopicConfig
 
@@ -206,7 +206,7 @@ func (k *Options) CreateTopicsByConn(ctx context.Context, topics []string, parti
 	return nil
 }
 
-// ListTopicByConn 根据连接列出Kafka中的所有主题
+// ListTopics 根据连接列出Kafka中的所有主题
 // 该函数通过连接到Kafka集群的领导者实例来获取所有主题列表
 // 参数:
 //
@@ -216,7 +216,7 @@ func (k *Options) CreateTopicsByConn(ctx context.Context, topics []string, parti
 //
 //	[]string: 包含所有主题名称的切片
 //	error: 如果连接到Kafka实例或读取分区信息时发生错误，则返回错误
-func (k *Options) ListTopicByConn(ctx context.Context) ([]string, error) {
+func (k *Options) ListTopics(ctx context.Context) ([]string, error) {
 	// 从上下文中获取logger实例
 	logger := log.FromContext(ctx)
 	// 获取Kafka集群的领导者主机地址
@@ -257,7 +257,7 @@ func (k *Options) ListTopicByConn(ctx context.Context) ([]string, error) {
 	return topics, nil
 }
 
-// DeleteTopicsByConn 通过连接到Kafka集群的领导者来删除指定的主题
+// DeleteTopics 通过连接到Kafka集群的领导者来删除指定的主题
 // 它接受一个上下文对象，用于日志记录和获取Kafka领导者主机地址
 // 参数:
 //
@@ -266,7 +266,7 @@ func (k *Options) ListTopicByConn(ctx context.Context) ([]string, error) {
 // 返回值:
 //
 //	error: 一个错误类型，如果执行过程中发生错误，则返回相应的错误信息
-func (k *Options) DeleteTopicsByConn(ctx context.Context, topics []string) error {
+func (k *Options) DeleteTopics(ctx context.Context, topics []string) error {
 	// 从上下文中提取日志记录器
 	logger := log.FromContext(ctx)
 
@@ -293,7 +293,7 @@ func (k *Options) DeleteTopicsByConn(ctx context.Context, topics []string) error
 	return nil
 }
 
-// DeleteAllTopicsByConn 删除与特定连接相关联的所有topics
+// DeleteAllTopics 删除与特定连接相关联的所有topics
 // 该方法首先通过ListTopicByConn函数获取所有与连接相关的topics列表
 // 然后使用DeleteTopicsByConn函数来删除这些topics
 // 参数:
@@ -303,12 +303,12 @@ func (k *Options) DeleteTopicsByConn(ctx context.Context, topics []string) error
 // 返回值:
 //
 //	error: 如果列出或删除topics时发生错误，则返回错误
-func (k *Options) DeleteAllTopicsByConn(ctx context.Context) error {
+func (k *Options) DeleteAllTopics(ctx context.Context) error {
 	// 获取所有的topic
-	topicsList, err := k.ListTopicByConn(ctx)
+	topicsList, err := k.ListTopics(ctx)
 	if err != nil {
 		return err
 	}
 	// 删除所有的topics
-	return k.DeleteTopicsByConn(ctx, topicsList)
+	return k.DeleteTopics(ctx, topicsList)
 }
