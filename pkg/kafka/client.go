@@ -36,16 +36,16 @@ type Interface interface {
 	DeleteAllTopicsByConn(ctx context.Context) error
 }
 
-// LeaderHost 通过上下文获取当前Kafka集群的控制节点主机信息。
-// 该函数主要用于确定哪个Kafka节点目前是控制节点。
+// LeaderHost 通过上下文获取当前Kafka集群的控制节点主机信息
+// 该函数主要用于确定哪个Kafka节点目前是控制节点
 // 参数:
 //
-//	ctx: 上下文，可用于传递超时、截止时间或取消请求等信息。
+//	ctx: 上下文，可用于传递超时、截止时间或取消请求等信息
 //
 // 返回值:
 //
-//	string: 当前控制节点的主机信息（IP地址和端口号）。
-//	error: 在获取控制节点主机信息过程中可能遇到的错误，如果没有错误，则为nil。
+//	  string: 当前控制节点的主机信息（IP地址和端口号）
+//		 error: 在获取控制节点主机信息过程中可能遇到的错误，如果没有错误，则为nil
 func (k *Options) LeaderHost(ctx context.Context) (string, error) {
 	logger := log.FromContext(ctx)
 	// 初始化dialer
@@ -67,10 +67,8 @@ func (k *Options) LeaderHost(ctx context.Context) (string, error) {
 }
 
 // WriteByConn 通过Kafka连接发送消息
-//
 // 该函数负责将一条消息发送到指定的Kafka主题和分区。它首先尝试与Kafka集群的Leader节点建立连接，
 // 然后设置写超时时间，最后发送消息并关闭连接
-//
 // 参数:
 //
 //	ctx: 上下文，用于传递超时、取消信号和日志等信息
@@ -81,7 +79,8 @@ func (k *Options) LeaderHost(ctx context.Context) (string, error) {
 //	value: 消息的值
 //
 // 返回值:
-// - error: 如果连接、设置超时、发送消息或关闭连接过程中发生错误，则返回该错误
+//
+//	error: 如果连接、设置超时、发送消息或关闭连接过程中发生错误，则返回该错误
 func (k *Options) WriteByConn(ctx context.Context, topic string, partition int, writeTimeout time.Duration, key, value []byte) error {
 	// 从上下文中获取日志记录器
 	logger := log.FromContext(ctx)
@@ -294,7 +293,16 @@ func (k *Options) DeleteTopicsByConn(ctx context.Context, topics []string) error
 	return nil
 }
 
-// DeleteAllTopicsByConn 删除所有的topics
+// DeleteAllTopicsByConn 删除与特定连接相关联的所有topics
+// 该方法首先通过ListTopicByConn函数获取所有与连接相关的topics列表
+// 然后使用DeleteTopicsByConn函数来删除这些topics
+// 参数:
+//
+//	ctx: 用于取消操作的上下文，可以在整个函数执行的任何时间点检查上下文并返回
+//
+// 返回值:
+//
+//	error: 如果列出或删除topics时发生错误，则返回错误
 func (k *Options) DeleteAllTopicsByConn(ctx context.Context) error {
 	// 获取所有的topic
 	topicsList, err := k.ListTopicByConn(ctx)
