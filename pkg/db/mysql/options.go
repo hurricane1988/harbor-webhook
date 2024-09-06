@@ -33,3 +33,5 @@ func NewMysqlOptions() *Options {
 		DB:       "",
 	}
 }
+
+// Harbor webhook返回信息结构体

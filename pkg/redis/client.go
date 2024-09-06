@@ -27,7 +27,7 @@ import (
 
 // Interface Redis 集群操作接口
 type Interface interface {
-	NewRedis() *redis.ClusterClient
+	Client() *redis.ClusterClient
 	Set(ctx context.Context, key, value string, expiration time.Duration) error
 	Get(ctx context.Context, key string) (string, error)
 	Existed(ctx context.Context, keys ...string) bool
@@ -36,8 +36,13 @@ type Interface interface {
 	Expire(ctx context.Context, key string, duration time.Duration) error
 }
 
-// NewRedis 创建并返回一个新的Redis集群客户端。
-func (r *Options) NewRedis() *redis.ClusterClient {
+// NewRedis 根据配置实例化一个Redis 接口
+func NewRedis(config Options) Interface {
+	return &config
+}
+
+// Client 创建并返回一个新的Redis集群客户端。
+func (r *Options) Client() *redis.ClusterClient {
 	// 根据配置信息初始化Redis集群客户端选项。
 	rdb := redis.NewClusterClient(&redis.ClusterOptions{
 		Addrs:       r.Address,        // Redis服务器地址列表
@@ -54,12 +59,12 @@ func (r *Options) NewRedis() *redis.ClusterClient {
 
 // Set 写入数据
 func (r *Options) Set(ctx context.Context, key, value string, expiration time.Duration) error {
-	return r.NewRedis().Set(ctx, key, value, expiration).Err()
+	return r.Client().Set(ctx, key, value, expiration).Err()
 }
 
 // Get 查询数据
 func (r *Options) Get(ctx context.Context, key string) (string, error) {
-	value, err := r.NewRedis().Get(ctx, key).Result()
+	value, err := r.Client().Get(ctx, key).Result()
 	if errors.Is(err, redis.Nil) {
 		return "", nil
 	} else if err != nil {
@@ -71,7 +76,7 @@ func (r *Options) Get(ctx context.Context, key string) (string, error) {
 
 // Existed 判断Keys是否存在
 func (r *Options) Existed(ctx context.Context, keys ...string) bool {
-	existedKeys, err := r.NewRedis().Exists(ctx, keys...).Result()
+	existedKeys, err := r.Client().Exists(ctx, keys...).Result()
 	if err != nil {
 		return false
 	}
@@ -80,15 +85,15 @@ func (r *Options) Existed(ctx context.Context, keys ...string) bool {
 
 // Keys 查询批量keys redis接口实现
 func (r *Options) Keys(ctx context.Context, pattern string) ([]string, error) {
-	return r.NewRedis().Keys(ctx, pattern).Result()
+	return r.Client().Keys(ctx, pattern).Result()
 }
 
 // Del 删除key
 func (r *Options) Del(ctx context.Context, keys ...string) error {
-	return r.NewRedis().Del(ctx, keys...).Err()
+	return r.Client().Del(ctx, keys...).Err()
 }
 
 // Expire 设置key过期
 func (r *Options) Expire(ctx context.Context, key string, duration time.Duration) error {
-	return r.NewRedis().Expire(ctx, key, duration).Err()
+	return r.Client().Expire(ctx, key, duration).Err()
 }
