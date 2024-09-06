@@ -31,29 +31,26 @@ import (
 
 // 全局常量定义
 const (
-	DefaultConfigurationName      = "config"
-	DefaultConfigurationDirectory = "conf"
-	DefaultConfigurationType      = "yaml"
-	DefaultWorkDirectory          = "/etc"
+	DefaultConfigurationName = "config"
+	DefaultConfigurationType = "yaml"
+	DefaultWorkDirectory     = "./etc"
 )
 
 // LoadFromDisk 初始化配置文件
 func LoadFromDisk(ctx context.Context) (*Config, error) {
 	Log := log.FromContext(ctx)
 	// 获取当前程序执行路径
-	workDir := filepath.Join(DefaultWorkDirectory, DefaultConfigurationDirectory, DefaultConfigurationName)
+	workDir := filepath.Join(DefaultWorkDirectory, DefaultConfigurationName)
 	// 加载viper获取配置路径
 	viper.AddConfigPath(workDir)
 	viper.AddConfigPath(homedir.HomeDir())
 	viper.AddConfigPath(".")
-
 	// 设置读取的文件名
 	viper.SetConfigName(DefaultConfigurationName)
 	// 设置读取的文件后缀
 	viper.SetConfigType(DefaultConfigurationType)
 	// 匹配环境变量
 	viper.AutomaticEnv()
-
 	// 执行读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
 		var configFileNotFoundError viper.ConfigFileNotFoundError

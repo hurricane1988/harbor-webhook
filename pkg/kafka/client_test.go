@@ -61,6 +61,22 @@ func TestCreateTopics(t *testing.T) {
 		wantErr bool
 	}{
 		// TODO: Add test cases.
+		{
+			name: "create kafka topic",
+			fields: fields{
+				Username: "root",
+				Password: "password",
+				Brokers: []string{
+					"10.10.10.:9090",
+				},
+				Topics: []string{
+					"topic-a",
+				},
+				AllowAutoTopicCreation: true,
+				Protocol:               "TCP",
+				Timeout:                10 * time.Second,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

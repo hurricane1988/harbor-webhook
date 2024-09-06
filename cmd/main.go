@@ -23,13 +23,11 @@ import (
 	"github.com/hurricane1988/harbor-webhook/pkg/utils"
 	"github.com/hurricane1988/harbor-webhook/pkg/version"
 	"github.com/hurricane1988/harbor-webhook/routes"
-	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"strings"
 )
 
 var (
-	scheme   = runtime.NewScheme()
 	setupLog = ctrl.Log.WithName("setup")
 )
 
