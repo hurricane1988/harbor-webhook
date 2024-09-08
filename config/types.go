@@ -17,9 +17,9 @@ limitations under the License.
 package config
 
 import (
-	"github.com/hurricane1988/harbor-webhook/pkg/db/mysql"
-	"github.com/hurricane1988/harbor-webhook/pkg/kafka"
-	"github.com/hurricane1988/harbor-webhook/pkg/redis"
+	"github.com/hurricane1988/harbor-webhook/pkg/sources/db/mysql"
+	"github.com/hurricane1988/harbor-webhook/pkg/sources/kafka"
+	"github.com/hurricane1988/harbor-webhook/pkg/sources/redis"
 )
 
 // Config 全局配置
