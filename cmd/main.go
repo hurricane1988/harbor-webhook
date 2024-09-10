@@ -23,7 +23,9 @@ import (
 	"github.com/hurricane1988/harbor-webhook/pkg/utils"
 	"github.com/hurricane1988/harbor-webhook/pkg/version"
 	"github.com/hurricane1988/harbor-webhook/routes"
+	"os"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"strings"
 )
 
@@ -32,6 +34,10 @@ var (
 )
 
 func main() {
+	opts := zap.Options{
+		Development: true,
+	}
+	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 	// 打印logo
 	fmt.Println(utils.Term())
 	// 打印版本信息
@@ -45,6 +51,7 @@ func main() {
 	err := router.Run(strings.Join([]string{"0.0.0.0", "8080"}, ":"))
 	if err != nil {
 		setupLog.Error(err, "startup harbor-webhook failed.")
+		os.Exit(1)
 		return
 	}
 }

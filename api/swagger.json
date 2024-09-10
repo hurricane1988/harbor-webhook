@@ -1,0 +1,372 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "harbor-webhook",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/metrics": {
+      "get": {
+        "summary": "Pull webhook metrics",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          },
+          "x-200:成功": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/5139764/apis/api-214005614-run",
+        "security": []
+      }
+    },
+    "/v1/webhook": {
+      "post": {
+        "summary": "Tag retention finished",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "occur_at": {
+                    "type": "integer"
+                  },
+                  "operator": {
+                    "type": "string"
+                  },
+                  "event_data": {
+                    "type": "object",
+                    "properties": {
+                      "retention": {
+                        "type": "object",
+                        "properties": {
+                          "total": {
+                            "type": "integer"
+                          },
+                          "retained": {
+                            "type": "integer"
+                          },
+                          "harbor_hostname": {
+                            "type": "string"
+                          },
+                          "project_name": {
+                            "type": "string"
+                          },
+                          "retention_policy_id": {
+                            "type": "integer"
+                          },
+                          "retention_rule": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "template": {
+                                  "type": "string"
+                                },
+                                "tag_selectors": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "kind": {
+                                        "type": "string"
+                                      },
+                                      "decoration": {
+                                        "type": "string"
+                                      },
+                                      "pattern": {
+                                        "type": "string"
+                                      },
+                                      "extras": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "x-apifox-orders": [
+                                      "kind",
+                                      "decoration",
+                                      "pattern",
+                                      "extras"
+                                    ],
+                                    "x-apifox-ignore-properties": []
+                                  }
+                                },
+                                "scope_selectors": {
+                                  "type": "object",
+                                  "properties": {
+                                    "repository": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "kind": {
+                                            "type": "string"
+                                          },
+                                          "decoration": {
+                                            "type": "string"
+                                          },
+                                          "pattern": {
+                                            "type": "string"
+                                          },
+                                          "extras": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "x-apifox-orders": [
+                                          "kind",
+                                          "decoration",
+                                          "pattern",
+                                          "extras"
+                                        ],
+                                        "x-apifox-ignore-properties": []
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "repository"
+                                  ],
+                                  "x-apifox-orders": [
+                                    "repository"
+                                  ],
+                                  "x-apifox-ignore-properties": []
+                                }
+                              },
+                              "x-apifox-orders": [
+                                "template",
+                                "tag_selectors",
+                                "scope_selectors"
+                              ],
+                              "x-apifox-ignore-properties": []
+                            }
+                          },
+                          "result": {
+                            "type": "string"
+                          },
+                          "deleted_artifact": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "type": "string"
+                                },
+                                "name_tag": {
+                                  "type": "string"
+                                }
+                              },
+                              "x-apifox-orders": [
+                                "type",
+                                "status",
+                                "name_tag"
+                              ],
+                              "x-apifox-ignore-properties": []
+                            }
+                          }
+                        },
+                        "required": [
+                          "total",
+                          "retained",
+                          "harbor_hostname",
+                          "project_name",
+                          "retention_policy_id",
+                          "retention_rule",
+                          "result",
+                          "deleted_artifact"
+                        ],
+                        "x-apifox-orders": [
+                          "total",
+                          "retained",
+                          "harbor_hostname",
+                          "project_name",
+                          "retention_policy_id",
+                          "retention_rule",
+                          "result",
+                          "deleted_artifact"
+                        ],
+                        "x-apifox-ignore-properties": []
+                      }
+                    },
+                    "required": [
+                      "retention"
+                    ],
+                    "x-apifox-orders": [
+                      "retention"
+                    ],
+                    "x-apifox-ignore-properties": []
+                  }
+                },
+                "required": [
+                  "type",
+                  "occur_at",
+                  "operator",
+                  "event_data"
+                ],
+                "x-apifox-orders": [
+                  "type",
+                  "occur_at",
+                  "operator",
+                  "event_data"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "type": "TAG_RETENTION",
+                "occur_at": 1680502598,
+                "operator": "MANUAL",
+                "event_data": {
+                  "retention": {
+                    "total": 1,
+                    "retained": 0,
+                    "harbor_hostname": "localhost",
+                    "project_name": "harbor",
+                    "retention_policy_id": 2,
+                    "retention_rule": [
+                      {
+                        "template": "always",
+                        "tag_selectors": [
+                          {
+                            "kind": "doublestar",
+                            "decoration": "matches",
+                            "pattern": "xxxxxxxxxx",
+                            "extras": "{\"untagged\":true}"
+                          }
+                        ],
+                        "scope_selectors": {
+                          "repository": [
+                            {
+                              "kind": "doublestar",
+                              "decoration": "repoMatches",
+                              "pattern": "**",
+                              "extras": ""
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "result": "SUCCESS",
+                    "deleted_artifact": [
+                      {
+                        "type": "image",
+                        "status": "SUCCESS",
+                        "name_tag": "alpine:3.8"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "event": "TAG_RETENTION",
+                      "operator": "MANUAL",
+                      "timestamp": "2023-04-03 14:16:38.000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "x-200:成功": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "event": {
+                      "type": "string"
+                    },
+                    "operator": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "event",
+                    "operator",
+                    "timestamp"
+                  ],
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": [
+                    "event",
+                    "operator",
+                    "timestamp"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/5139764/apis/api-214009564-run",
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {}
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8080",
+      "description": "开发环境"
+    }
+  ]
+}

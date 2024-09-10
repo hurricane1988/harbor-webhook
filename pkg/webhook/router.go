@@ -14,18 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package routes
+package webhook
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/hurricane1988/harbor-webhook/pkg/metrics"
-	"github.com/hurricane1988/harbor-webhook/pkg/webhook"
 )
 
-// Router 全局router注册
-func Router(e *gin.Engine) {
-	// 注册Prometheus Metric路由
-	metrics.RegisterRouter(e)
-	// 注册Harbor webhook 路由
-	webhook.RegisterRouter(e)
+func RegisterRouter(e *gin.Engine) {
+	// 设置路由分组
+	group := e.Group("/v1")
+	group.POST("/webhook", handleWebhook)
 }

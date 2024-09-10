@@ -14,18 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package routes
+package utils
 
-import (
-	"github.com/gin-gonic/gin"
-	"github.com/hurricane1988/harbor-webhook/pkg/metrics"
-	"github.com/hurricane1988/harbor-webhook/pkg/webhook"
-)
+import "time"
 
-// Router 全局router注册
-func Router(e *gin.Engine) {
-	// 注册Prometheus Metric路由
-	metrics.RegisterRouter(e)
-	// 注册Harbor webhook 路由
-	webhook.RegisterRouter(e)
+func ParseTime(timestamp int64) string {
+	// 将时间戳转换为 Time 对象
+	t := time.Unix(timestamp, 0)
+	return t.Format("2006-01-02 15:04:05.000")
 }
